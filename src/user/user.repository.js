@@ -1,35 +1,31 @@
 import { prisma } from "../app.js"
 
 class UserRepository {
-    async findOne(query) {
-       const user = await prisma.user.findUnique({ where: query })
-       return user
+    findOne(query) {
+       return prisma.user.findUnique({ where: query })
     }
 
-    async findFirst(query) {
-        const user = await prisma.user.findFirst({ where: query })
-        return user
+    findFirst(query) {
+        return prisma.user.findFirst({ where: query })
      }
 
-    async findAll() {
-        const users = await prisma.user.findMany({ orderBy: { created_at: 'desc' }})
-        return users
+    findAll() {
+        return prisma.user.findMany({ orderBy: { created_at: 'desc' }})
     }
 
-    async create(data) {
-        const newUser = await prisma.user.create({ data })
-        return newUser
+    create(data) {
+        return prisma.user.create({ data })
     }
 
-    async edit(query, data) {
-        await prisma.user.update({
+    edit(query, data) {
+        return prisma.user.update({
             where: query,
             data
         })
     }
 
-    async delete(query) {
-        await prisma.user.delete({ where: query })
+    delete(query) {
+        return prisma.user.delete({ where: query })
     }
 }
 

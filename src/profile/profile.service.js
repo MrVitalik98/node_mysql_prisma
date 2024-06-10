@@ -3,6 +3,7 @@ import { prisma } from "../app.js"
 import { ApiError } from "../exceptions/api-error.js"
 import profileRepository from "./profile.repository.js"
 import { __dirname } from "../middlewares/file-upload.js"
+import userRepository from "../user/user.repository.js"
 
 class ProfileService {
     async getAllProfiles({ page=1, limit=10 }) {
@@ -101,8 +102,11 @@ class ProfileService {
     }
 
     async delete(query) {
-        const deletedProfile = await profileRepository.delete({ where: query, select: { userId: true } })
-        return deletedProfile
+        const { profileId, userEmail } = query 
+        const deleteProfile = profileRepository.delete({ id: profileId })
+        const deleteUser = userRepository.delete({ email: userEmail })
+
+        await prisma.$transaction([ deleteProfile, deleteUser ])
     }
 }
 

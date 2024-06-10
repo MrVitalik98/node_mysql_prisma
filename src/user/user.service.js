@@ -48,25 +48,6 @@ class UserService {
             password: hashedPassword
         })
     }
-
-    async editUser(query, data) {
-        const { email, firstname, lastname, gender } = data
-
-        const user = await userRepository.findOne(query)
-
-        if(!user) throw ApiError.BadRequestError('User does not exist')
-
-        if(email) {
-            const candidate = await userRepository.findFirst({
-                id: { not: user.id },
-                email
-            })
-    
-            if(candidate) throw ApiError.BadRequestError('Email already in use')    
-        }
-        
-        await userRepository.edit(query, { email, firstname, lastname, gender })
-    }
 }
 
 export default new UserService()

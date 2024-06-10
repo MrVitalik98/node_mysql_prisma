@@ -23,6 +23,6 @@ router.put('/profile/:profileId', fileUpload.single('avatar'), editValidator, Pr
 // ===================================================================
 // ================= Delete User Profile By ID =======================
 // ===================================================================
-// router.delete('/profile/:profileId', ProfileController.deleteProfile)
+router.delete('/profile/:profileId', ProfileController.deleteProfile)
 
 export default router
