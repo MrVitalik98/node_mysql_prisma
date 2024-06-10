@@ -31,6 +31,10 @@ class ProfileController {
         const errors = validationResult(req)
         const { profileId } = req.params
         const { filename: avatar = '' } = req.file ?? {}
+        const { email, firstname, lastname, gender } = req.body ?? {}
+    
+        const profileData = { avatar }
+        const userData = { email, lastname, firstname, gender }
 
         if(!errors.isEmpty()) {
             await deleteFile(avatar)
@@ -38,9 +42,7 @@ class ProfileController {
         }
         
         try {
-            const profile = await profileService.editProfile({ id: parseInt(profileId) }, { avatar })
-            await userService.editUser({ id: profile.userId }, req.body)
-            
+            await profileService.editProfile({ id: parseInt(profileId) }, profileData, userData )
             return res.status(200).json({ msg: 'User profile data has been successfully changed'})
         }
         catch(e) {

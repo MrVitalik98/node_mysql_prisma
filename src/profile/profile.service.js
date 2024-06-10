@@ -64,30 +64,46 @@ class ProfileService {
         return profile
     }
 
-    async createNewProfile(userId) {
-        await prisma.profile.create({ data: { userId } })
+    async createNewProfile(body) {
+        await profileRepository.create({ 
+            user: {
+                create: {
+                    ...body
+                }
+            } 
+        })
     }
 
-    async editProfile(query, data) {
-        const profile = await profileRepository.findOne(query, { userId: true })
+    async editProfile(query, profileData, userData) {
+        const profile = await profileRepository.findOne(query, { id: true })
         
-        for(let [key, value] of Object.entries(data)) {
-            if(!value) delete data[key]
+        for(let [key, value] of Object.entries(profileData)) {
+            if(!value) delete profileData[key]
         }
 
         if(!profile) {
             throw ApiError.BadRequestError('Profile does not exist')
         }
 
-        await profileRepository.edit(query, data)
+        await profileRepository.edit(
+            query, 
+            {
+                ...profileData,
+                user: {
+                    update: {
+                        ...userData
+                    }
+                }
+            }
+        )
 
         return profile
     }
 
-    // async delete(query) {
-    //     const deletedProfile = await prisma.profile.delete({ where: query, select: { userId: true } })
-    //     return deletedProfile
-    // }
+    async delete(query) {
+        const deletedProfile = await profileRepository.delete({ where: query, select: { userId: true } })
+        return deletedProfile
+    }
 }
 
 export default new ProfileService()

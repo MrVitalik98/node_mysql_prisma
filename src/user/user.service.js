@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import userRepository from "./user.repository.js"
 import { ApiError } from "../exceptions/api-error.js"
 import tokenService from "../services/token.service.js"
+import profileService from "../profile/profile.service.js"
 
 class UserService {
     async login(body) {
@@ -41,13 +42,11 @@ class UserService {
         const saltRounds = 10
         const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-        const newUser = await userRepository.create({
+        await profileService.createNewProfile({
             email,
             firstname,
             password: hashedPassword
         })
-
-        return newUser
     }
 
     async editUser(query, data) {

@@ -22,10 +22,10 @@ class ProfileRepository {
         })
     }
 
-    // async delete(query) {
-    //     const deletedProfile = await prisma.profile.delete({ where: query, select: { userId: true } })
-    //     return deletedProfile
-    // }
+    async delete(query) {
+        const deletedProfile = await prisma.profile.delete({ where: query, select: { userId: true } })
+        return deletedProfile
+    }
 }
 
 export default new ProfileRepository()

@@ -39,9 +39,7 @@ class UserController {
         }
 
         try {
-            const newUser = await userService.register(req.body)
-            await profileService.createNewProfile(newUser.id)
-
+            await userService.register(req.body)
             return res.status(201).json({ message: 'Registration completed successfully' })
         }
         catch(e) {
