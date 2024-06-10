@@ -51,23 +51,23 @@ class ProfileController {
         }
     }
 
-    // async deleteProfile(req, res, next) {
-    //     try {
-    //         const { profileId } = req.params
-    //         const profile = await profileService.findOne({ id: parseInt(profileId) })
+    async deleteProfile(req, res, next) {
+        try {
+            const { profileId } = req.params
+            const profile = await profileService.getProfile({ id: parseInt(profileId) })
 
-    //         if(!profile) return next(ApiError.BadRequestError('Profile not found'))
+            if(!profile) return next(ApiError.BadRequestError('Profile not found'))
 
-    //         const deletedProfile = await profileService.delete({ id: profile.id })
+            await profileService.delete({ profileId: profile.id, userEmail: profile.user.email })
 
-    //         await userService.delete({ id: deletedProfile.userId })
+            await deleteFile(profile.avatar)
 
-    //         return res.status(200).json({ message: 'Profile deleted successfully'})
-    //     }
-    //     catch(e) {
-    //         next(e)
-    //     }
-    // }
+            return res.status(200).json({ message: 'Profile deleted successfully'})
+        }
+        catch(e) {
+            next(e)
+        }
+    }
 }
 
 export default new ProfileController()

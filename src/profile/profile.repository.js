@@ -1,30 +1,27 @@
 import { prisma } from "../app.js"
 
 class ProfileRepository {
-    async findAll(query) {        
-        const result = await Promise.all(query)
-        return result
+    findAll(query) {        
+        return Promise.all(query)
     }
 
-    async findOne(query, select = {}) {
-        const profile = await prisma.profile.findUnique({ where: query, select })
-        return profile
+    findOne(query, select = {}) {
+        return prisma.profile.findUnique({ where: query, select })
     }
 
-    async create(data) {
-        await prisma.profile.create({ data })
+    create(data) {
+        return prisma.profile.create({ data })
     }
 
-    async edit(query, data) {
-        await prisma.profile.update({
+    edit(query, data) {
+        return prisma.profile.update({
             where: query,
             data
         })
     }
 
-    async delete(query) {
-        const deletedProfile = await prisma.profile.delete({ where: query, select: { userId: true } })
-        return deletedProfile
+    delete(query) {
+        return prisma.profile.delete({ where: query })
     }
 }
 
